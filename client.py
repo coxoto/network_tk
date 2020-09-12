@@ -5,17 +5,11 @@ import time
 from Tank import Tank
 import platform
 
-my_tank_name = str(random.randint(1,10000))
-
-data = {
-
-    "canvas_width":1000,
-    "canvas_height":800}
-
 root = Tk()
-mycanvas = Canvas(root,width=data["canvas_width"],height=data["canvas_height"],bg="black")
-#tank = c1.create_rectangle(10,10,20,20,fill='green')
-mytank = Tank(mycanvas)
+mycanvas = Canvas(root,width=1000,height=800,bg="black")
+
+mytank = Tank()
+
 
 def getkey(event):
     #right 
@@ -56,7 +50,8 @@ def getkey(event):
         if(event.keycode == 115):
             mytank.set_direction('down')
             #mytank.move_down()
-    
+
+# store other people's tank  
 tanks = {}
 
 cc = Sockclient(tanks)
@@ -70,9 +65,12 @@ index = 0
 
 while 1:
     index += 1
+
     if(index%2==0):
         mytank.keep_moving()
+
     cc.send(mytank.status_json())
+    
     for t in tanks.values():
         if(t.get("tankobj")):
             if(t['delta_x'] or  t['delta_y']):
