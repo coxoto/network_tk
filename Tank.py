@@ -11,10 +11,11 @@ class Tank:
         self.color = color
         self.pos_x = init_x
         self.pos_y = init_y
+        self.direction = 'right'
         #self.delta_x = 0
         #self.delta_y = 0
         #self.tank_on_canvas = self.canvas.create_rectangle(self.pos_x,self.pos_y,self.pos_x+20,self.pos_y+20,fill=self.color)
-        self.speed = 5
+        self.speed = 10
 
 
     # def update_tank_on_canvas(self):
@@ -26,7 +27,20 @@ class Tank:
         self.pos_x  = x
         self.pos_y  = y
         self.check_wall()
+
+    def set_direction(self,direction):
+        self.direction = direction
         
+    def keep_moving(self):
+        if(self.direction == 'right'):
+            self.move_right()
+        if(self.direction == 'left'):
+            self.move_left()
+        if(self.direction == 'up'):
+            self.move_up()
+        if(self.direction == 'down'):
+            self.move_down()
+
 
     def move_right(self):
         self.pos_x += self.speed

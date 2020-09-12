@@ -21,29 +21,41 @@ def getkey(event):
     #right 
     if(platform.system() == 'Windows'):
         if(event.keysym == "Right"):
-            mytank.move_right()
+            mytank.set_direction('right')
+            #mytank.move_right()
+            
         #left
         if(event.keysym == "Left"):
-            mytank.move_left()
+            mytank.set_direction('left')
+            #mytank.move_left()
+        
         #up
         if(event.keysym == "Up"):
-            mytank.move_up()
+            mytank.set_direction('up')
+            #mytank.move_up()
+
         #down
         if(event.keysym == "Down"):
-            mytank.move_down()
+            mytank.set_direction('down')
+            #mytank.move_down()
+
     else:
         #right 
         if(event.keycode == 100):
-            mytank.move_right()
+            mytank.set_direction('right')
+            #mytank.move_right()
         #left
         if(event.keycode == 97):
-            mytank.move_left()
+            mytank.set_direction('left')
+            #mytank.move_left()
         #up
         if(event.keycode == 119):
-            mytank.move_up()
+            mytank.set_direction('up')
+            #mytank.move_up()
         #down
         if(event.keycode == 115):
-            mytank.move_down()
+            mytank.set_direction('down')
+            #mytank.move_down()
     
 tanks = {}
 
@@ -58,6 +70,8 @@ index = 0
 
 while 1:
     index += 1
+    if(index%2==0):
+        mytank.keep_moving()
     cc.send(mytank.status_json())
     for t in tanks.values():
         if(t.get("tankobj")):
