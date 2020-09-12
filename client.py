@@ -3,6 +3,7 @@ from tkinter import *
 import random
 import time
 from Tank import Tank
+import platform
 
 my_tank_name = str(random.randint(1,10000))
 
@@ -18,19 +19,31 @@ mytank = Tank(mycanvas)
 
 def getkey(event):
     #right 
-    if(event.keysym == "Right"):
-        mytank.move_right()
-    #left
-    if(event.keysym == "Left"):
-        mytank.move_left()
-    #up
-    if(event.keysym == "Up"):
-        mytank.move_up()
-    #down
-    if(event.keysym == "Down"):
-        mytank.move_down()
-    #cc.send(mytank.status_json())
-    #root.update()
+    if(platform.system() == 'Windows'):
+        if(event.keysym == "Right"):
+            mytank.move_right()
+        #left
+        if(event.keysym == "Left"):
+            mytank.move_left()
+        #up
+        if(event.keysym == "Up"):
+            mytank.move_up()
+        #down
+        if(event.keysym == "Down"):
+            mytank.move_down()
+    else:
+        #right 
+        if(event.keycode == 100):
+            mytank.move_right()
+        #left
+        if(event.keycode == 97):
+            mytank.move_left()
+        #up
+        if(event.keycode == 119):
+            mytank.move_up()
+        #down
+        if(event.keycode == 115):
+            mytank.move_down()
     
 tanks = {}
 
