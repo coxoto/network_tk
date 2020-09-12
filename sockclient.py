@@ -10,7 +10,7 @@ logging.basicConfig(format=FORMAT,level=logging.INFO)
 
 
 class Sockclient:
-    def __init__(self,tanks,ip='127.0.0.1',port=999):
+    def __init__(self,tanks,ip='10.10.10.100',port=999):
         self.clients = socket.socket()
         self.raddr = (ip,port)
         self.event = threading.Event()
