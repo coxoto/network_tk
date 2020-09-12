@@ -1,9 +1,10 @@
 import threading
 import socket
 import logging
-import datetime
+#import datetime
 import json
-
+from Tank import Tank
+from datetime import datetime
 
 FORMAT = '%(asctime)s %(threadName)s %(thread)d %(message)s'
 logging.basicConfig(format=FORMAT,level=logging.INFO)
@@ -31,31 +32,21 @@ class Sockclient:
             # logging.info(data)
             if data.strip() == b'quit':
                 break
-            #message = '{:%Y/%m/%d %H:%M:%S}{}:{}\n{}\n'.format(datetime.datetime.now(),*self.raddr,data.strip())
-            #logging.info(message)
-            jsondata = '{}'.format(data.strip())
-            logging.info(jsondata)
+            # jsondata = '{}'.format(data.strip())
+            # logging.info(jsondata)
+            net_json_data = str(data.strip(),'utf-8')
+            jsonobj = None
             try:
-                jsonobj = json.loads(str(data.strip(),'utf-8'))
-                #logging.info(jsonobj['id'])
-                if(self.tanks.get(jsonobj['id'])):
-                    #logging.info("=====> old tank")
-                    self.tanks[jsonobj['id']]["delta_x"] = jsonobj['pos_x'] - self.tanks[jsonobj['id']]['pos_x']
-                    self.tanks[jsonobj['id']]["delta_y"] = jsonobj['pos_y'] - self.tanks[jsonobj['id']]['pos_y']
-                else:
-                    #logging.info("=====> new tank")
-                    self.tanks[jsonobj['id']] = jsonobj
-                    self.tanks[jsonobj['id']]["delta_x"] = 0
-                    self.tanks[jsonobj['id']]["delta_y"] = 0
-                    
-                    #logging.info(self.tanks)
-                
+                jsonobj = json.loads(net_json_data)
             except:
-                logging.info("*****!!!!!!!!!!!!!*****")
-
+                logging.info("net_json_wrong")
+            if(jsonobj):
+                if(not self.tanks.get(jsonobj['id'])):
+                    self.tanks[jsonobj['id']] = Tank(jsonobj['id'])
+                self.tanks[jsonobj['id']].set_net_json(net_json_data)
+                timestamp = int(datetime.timestamp(datetime.now()))
+                self.tanks[jsonobj['id']].set_timestamp(timestamp)
       
-
-
     def send(self,message:str):
         data = '{}\n'.format(message.strip()).encode()
         self.clients.send(data)

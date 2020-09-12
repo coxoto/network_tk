@@ -5,37 +5,37 @@ import time
 from Tank import Tank
 import platform
 
-my_tank_name = str(random.randint(1,10000))
-
-data = {
-
-    "canvas_width":1000,
-    "canvas_height":800}
 
 root = Tk()
-mycanvas = Canvas(root,width=data["canvas_width"],height=data["canvas_height"],bg="black")
-#tank = c1.create_rectangle(10,10,20,20,fill='green')
-mytank = Tank(mycanvas)
+mycanvas = Canvas(root,width=600,height=600,bg="black")
+
+my_id = random.randint(1000,9999)
+mytank = Tank(my_id)
+mytank.random_color()
+# store other people's tank  
+tanks = {}
+
 
 def getkey(event):
     #right 
     if(platform.system() == 'Windows'):
-        if(event.keysym == "Right"):
+
+        if(event.keysym == "d"):
             mytank.set_direction('right')
             #mytank.move_right()
             
         #left
-        if(event.keysym == "Left"):
+        if(event.keysym == "a"):
             mytank.set_direction('left')
             #mytank.move_left()
         
         #up
-        if(event.keysym == "Up"):
+        if(event.keysym == "w"):
             mytank.set_direction('up')
             #mytank.move_up()
 
         #down
-        if(event.keysym == "Down"):
+        if(event.keysym == "s"):
             mytank.set_direction('down')
             #mytank.move_down()
 
@@ -56,35 +56,26 @@ def getkey(event):
         if(event.keycode == 115):
             mytank.set_direction('down')
             #mytank.move_down()
-    
-tanks = {}
+
 
 cc = Sockclient(tanks)
 cc.start()
-
 mycanvas.focus_set()
 mycanvas.bind("<Key>",getkey)
 mycanvas.pack()
 
-index = 0
 
-while 1:
-    index += 1
-    if(index%2==0):
-        mytank.keep_moving()
+while True:
+
+    mytank.keep_moving()
     cc.send(mytank.status_json())
-    for t in tanks.values():
-        if(t.get("tankobj")):
-            if(t['delta_x'] or  t['delta_y']):
-                mycanvas.move(t["tankobj"],t['delta_x'], t['delta_y'])
-                t['pos_x'] += t['delta_x']
-                t['pos_y'] += t['delta_y']
-                t['delta_x'] = 0
-                t['delta_y'] = 0
-        else:
-            t["tankobj"] = mycanvas.create_rectangle(t["pos_x"],t["pos_y"],t["pos_x"]+20,t["pos_y"]+20,fill=t["color"])
+    draw_tanks = tanks.copy()
+    for t in draw_tanks.values():
+        t.update_canvas(mycanvas,my_id)
+    
     root.update()
-    time.sleep(0.05)
+    time.sleep(0.1)
+
 
 
 
