@@ -6,6 +6,7 @@ class Tank:
 
 
  
+
     def __init__(self,id):
         self.id = id
         self.color = 'green'
